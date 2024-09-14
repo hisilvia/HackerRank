@@ -1,11 +1,5 @@
 import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
-import java.util.regex.*;
 import java.util.stream.*;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -83,10 +77,6 @@ class Result {
         List<String> secondDeto = new ArrayList<>();
         List<String> thirdDeto = new ArrayList<>();
         List<String> fillAllBombs = new ArrayList<>();     //even times
-        
-        //List<String> result = new ArrayList<>();
-        
-        
         
         int r = grid.size();
         int c = grid.get(0).length();
