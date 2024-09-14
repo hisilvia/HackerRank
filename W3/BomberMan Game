@@ -9,7 +9,6 @@ import java.util.regex.*;
 import java.util.stream.*;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-
 class Result {
 
     /*
@@ -20,6 +19,16 @@ class Result {
      *  1. INTEGER n
      *  2. STRING_ARRAY grid
      */
+
+    /*
+     * Since detonations take place only at odd times, if n (the number of seconds) is even,
+     * the grid is composed only of O (gridAtEvenTimes).
+     * At n == 1, no detonations take place, so the grid is the starting grid (initialGrid).
+     * At n == 3, the first detonation happens (gridAfterFirstDetonation).
+     * After this second, we note that there is a recurrent pattern that repeat itself every 4 seconds: 
+     * - at n == 5, 9, 13, ... (i.e. when n % 4 == 1), the grid is equal to gridAfterSecondDetonation
+     * - at n == 7, 11, 15, ... (i.e when n % 4 == 3), the grid is equal to gridAfterThirdDetonation
+     */
     public static List<String> detoBomb(List<String> previousGrid, List<String> nextGrid) {
         
         int row = previousGrid.size();
@@ -28,11 +37,12 @@ class Result {
         for (int i=0; i<row; i++) {
             for (int j=0; j<col; j++) {
                 char currentCell = previousGrid.get(i).charAt(j);
-                
-                if (currentCell == '0') {
-                    String str1 = nextGrid.get(i).substring(0, j)+"."
-                                    +nextGrid.get(i).substring(j+1);
+                //System.out.println("i=" + i + " cc=" + currentCell);
+                if (currentCell == 'O') {
+                    String str1 = nextGrid.get(i).substring(0, j)+"."+nextGrid.get(i).substring(j+1);
+                    //System.out.println("str1=" + str1);
                     nextGrid.set(i, str1);
+                    //System.out.println("nextGrid=" + nextGrid);
                     if (i-1 >= 0) {
                         String str2 = nextGrid.get(i-1).substring(0, j)+"."
                                     +nextGrid.get(i-1).substring(j+1);
@@ -53,15 +63,16 @@ class Result {
                                     +nextGrid.get(i).substring(j+2);
                         nextGrid.set(i, str2); 
                     } 
-                    if (j+2 == col-1 ) {
-                         String str2 = nextGrid.get(i).substring(0, j+1)+".";
-                        nextGrid.set(i, str2); 
-                    }   
+                    // if (j+2 == col-1 ) {
+                    //      String str2 = nextGrid.get(i).substring(0, j+1)+".";
+                    //     nextGrid.set(i, str2); 
+                    // }   
                     
                 }
                 
             }
-        }   
+        }  
+        //System.out.println("nextGrid1=" + nextGrid); 
         return nextGrid;
         
     }
@@ -89,8 +100,13 @@ class Result {
             thirdDeto.add(bombs);
             fillAllBombs.add(bombs);
         }
+        // System.out.println("1st=" + firstDeto);
+        // System.out.println("2nd=" + secondDeto);
+        // System.out.println("3rd=" + thirdDeto);
+        // System.out.println("all=" + fillAllBombs);
         
         firstDeto = detoBomb(grid, firstDeto);
+        //System.out.println("1st-1=" + firstDeto);
         
         if (n == 1)
             return grid;
